@@ -29,6 +29,14 @@ migrate create -ext sql -dir db/migration -seq "init_scheme"
 sqlc init
 sqlc generate
 ```
+## 
+```
+go get github.com/lib/pq
+```
+## testfy
+```
+go get github.com/stretchr/testify
+```
 
 ## api 목록
 ### role: Admin
