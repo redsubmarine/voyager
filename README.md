@@ -38,6 +38,11 @@ go get github.com/lib/pq
 go get github.com/stretchr/testify
 ```
 
+## gin
+```
+go get -u github.com/gin-gonic/gin
+```
+
 ## api 목록
 ### role: Admin
 - signIn
