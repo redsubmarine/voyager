@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/yangoneseok/voyager/util"
 )
 
 func TestCreateUser(t *testing.T) {
 	arg := CreateUserParams{
-		Username: "username", // randomly
-		Email:    "email@email.com",
+		Username: util.RandomName(),
+		Email:    util.RandomEmail(),
 		Password: "password",
 	}
 
