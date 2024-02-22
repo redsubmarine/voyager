@@ -43,6 +43,11 @@ go get github.com/stretchr/testify
 go get -u github.com/gin-gonic/gin
 ```
 
+## viper(환경변수)
+```
+go get github.com/spf13/viper
+```
+
 ## api 목록
 ### role: Admin
 - signIn
