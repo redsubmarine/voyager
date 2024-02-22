@@ -48,6 +48,12 @@ go get -u github.com/gin-gonic/gin
 go get github.com/spf13/viper
 ```
 
+## gomock
+- [gomock](https://github.com/uber-go/mock)
+```
+go install go.uber.org/mock/mockgen@latest
+```
+
 ## api 목록
 ### role: Admin
 - signIn
