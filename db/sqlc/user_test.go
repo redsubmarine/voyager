@@ -75,10 +75,12 @@ func TestListUsers(t *testing.T) {
 
 // only for Test
 func createRandomUser(t *testing.T) User {
+	hashed, err := util.HashPassword("password")
+	require.NoError(t, err)
 	arg := CreateUserParams{
 		Username: util.RandomName(),
 		Email:    util.RandomEmail(),
-		Password: "password",
+		Password: hashed,
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)

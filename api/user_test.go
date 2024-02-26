@@ -18,7 +18,7 @@ import (
 )
 
 func TestGetUserAPI(t *testing.T) {
-	user := randomUser()
+	user := randomUser(t)
 
 	testCases := []struct {
 		name          string
@@ -107,11 +107,13 @@ func TestGetUserAPI(t *testing.T) {
 	}
 }
 
-func randomUser() db.User {
+func randomUser(t *testing.T) db.User {
+	hashed, err := util.HashPassword("password")
+	require.NoError(t, err)
 	return db.User{
 		ID:       util.RandomInt(1, 1000),
 		Username: util.RandomName(),
-		Password: util.RandomString(20),
+		Password: hashed,
 		Email:    util.RandomEmail(),
 	}
 }
