@@ -30,6 +30,10 @@ func RandomString(n int) string {
 	return sb.String()
 }
 
+func RandomID() int64 {
+	return RandomInt(1, 1000)
+}
+
 func RandomName() string {
 	return RandomString(10)
 }

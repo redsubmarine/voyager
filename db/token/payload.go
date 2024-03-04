@@ -26,4 +26,13 @@ func NewPayload(userID int64, duration time.Duration) (*Payload, error) {
 		IssuedAt:  time.Now(),
 		ExpiredAt: time.Now().Add(duration),
 	}
+	return payload, nil
+}
+
+// Valid checks if the token payload is valid or not
+func (p *Payload) Valid() error {
+	if time.Now().After(p.ExpiredAt) {
+		return ErrExpiredToken
+	}
+	return nil
 }
