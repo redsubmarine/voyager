@@ -1,20 +1,40 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/yangoneseok/voyager/db/sqlc"
+	"github.com/yangoneseok/voyager/db/token"
+	"github.com/yangoneseok/voyager/util"
 )
 
 // Server serves HTTP requests for app service
 type Server struct {
-	store  db.Store
-	router *gin.Engine
+	config     util.Config
+	store      db.Store
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
 // NewServer creates a new HTTP server and setup routing
-func NewServer(store db.Store) *Server {
-	server := &Server{store: store}
+func NewServer(config util.Config, store db.Store) (*Server, error) {
+	tokenMaker, err := token.NewJWTMaker(config.TokenSymetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
+	}
+	server := &Server{
+		config:     config,
+		store:      store,
+		tokenMaker: tokenMaker,
+	}
 
+	server.setupRouter()
+
+	return server, nil
+}
+
+func (server *Server) setupRouter() {
 	router := gin.Default()
 	router.POST("/users", server.createUser)
 	router.GET("/users/:id", server.getUser)
@@ -22,9 +42,9 @@ func NewServer(store db.Store) *Server {
 	router.PATCH("/users", server.updateUser)
 	router.DELETE("/users", server.deleteUser)
 
+	// auth
+	router.POST("/auth/login", server.loginUser)
 	server.router = router
-
-	return server
 }
 
 // Start runs the HTTP server on a specific address

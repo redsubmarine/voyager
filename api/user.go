@@ -3,25 +3,11 @@ package api
 import (
 	"database/sql"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/yangoneseok/voyager/db/sqlc"
 	"github.com/yangoneseok/voyager/util"
 )
-
-type createUserRequest struct {
-	Username string `json:"username" binding:"required,alphanum"`
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=8"`
-}
-
-type createUserResponse struct {
-	ID        int64     `json:"id"`
-	Username  string    `json:"username"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-}
 
 func (server *Server) createUser(ctx *gin.Context) {
 	var req createUserRequest
@@ -52,18 +38,8 @@ func (server *Server) createUser(ctx *gin.Context) {
 		return
 	}
 
-	rsp := createUserResponse{
-		ID:        user.ID,
-		Username:  user.Username,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-	}
-
+	rsp := newUserResponse(user)
 	ctx.JSON(http.StatusOK, rsp)
-}
-
-type getUserRequest struct {
-	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
 func (server *Server) getUser(ctx *gin.Context) {
@@ -74,7 +50,7 @@ func (server *Server) getUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := server.store.GetUser(ctx, req.ID)
+	user, err := server.store.GetUserByID(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
@@ -84,11 +60,6 @@ func (server *Server) getUser(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, user)
-}
-
-type listUserRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
 func (server *Server) listUser(ctx *gin.Context) {
@@ -111,11 +82,6 @@ func (server *Server) listUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, users)
 }
 
-type updateUserRequest struct {
-	ID       int64  `json:"id" binding:"required"`
-	Username string `json:"username" binding:"required"`
-}
-
 func (server *Server) updateUser(ctx *gin.Context) {
 	var req updateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -134,10 +100,6 @@ func (server *Server) updateUser(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, user)
-}
-
-type deleteUserRequest struct {
-	ID int64 `json:"id" binding:"required"`
 }
 
 func (server *Server) deleteUser(ctx *gin.Context) {
