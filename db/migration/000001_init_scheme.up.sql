@@ -4,5 +4,5 @@ CREATE TABLE "users" (
   "email" varchar NOT NULL UNIQUE,
   "password" varchar NOT NULL,
   "role" varchar NOT NULL DEFAULT 'regular',
-  "created_at" timestamp NOT NULL DEFAULT (now())
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
