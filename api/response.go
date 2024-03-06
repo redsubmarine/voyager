@@ -34,3 +34,7 @@ type loginUserResponse struct {
 	RefreshToken string    `json:"refresh_token"`
 	User         userResponse
 }
+
+type renewAccessTokenResponse struct {
+	AccessToken string `json:"access_token" binding:"required"`
+}

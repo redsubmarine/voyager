@@ -47,6 +47,8 @@ func (server *Server) setupRouter() {
 	router.PATCH("/users", server.updateUser)
 	router.DELETE("/users", server.deleteUser)
 
+	router.POST("/tokens/renew", server.renewAccessToken)
+
 	// auth
 	router.POST("/auth/login", server.loginUser)
 	server.router = router
