@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	db "github.com/yangoneseok/voyager/db/sqlc"
 )
 
@@ -29,12 +28,12 @@ func newUserResponse(user db.User) userResponse {
 var okResponse = gin.H{"result": "ok"}
 
 type loginUserResponse struct {
-	SessionID    uuid.UUID `json:"session_id"`
-	AccessToken  string    `json:"access_token"`
-	RefreshToken string    `json:"refresh_token"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 	User         userResponse
 }
 
 type renewAccessTokenResponse struct {
-	AccessToken string `json:"access_token" binding:"required"`
+	AccessToken  string `json:"access_token" binding:"required"`
+	RefreshToken string `json:"refresh_token" binding:"required"`
 }
