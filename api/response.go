@@ -28,9 +28,9 @@ func newUserResponse(user db.User) userResponse {
 var okResponse = gin.H{"result": "ok"}
 
 type loginUserResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	User         userResponse
+	AccessToken  string       `json:"access_token"`
+	RefreshToken string       `json:"refresh_token"`
+	User         userResponse `json:"user"`
 }
 
 type renewAccessTokenResponse struct {
