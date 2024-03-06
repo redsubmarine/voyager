@@ -72,3 +72,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, rsp)
 }
+
+func (server *Server) signUpUser(ctx *gin.Context) {
+	server.createUser(ctx)
+}

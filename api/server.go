@@ -51,6 +51,7 @@ func (server *Server) setupRouter() {
 
 	// auth
 	router.POST("/auth/login", server.loginUser)
+	router.POST("/auth/signup", server.signUpUser)
 	server.router = router
 }
 
