@@ -1,10 +1,11 @@
 package api
 
 import (
-	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	db "github.com/yangoneseok/voyager/db/sqlc"
 	"github.com/yangoneseok/voyager/util"
 )
 
@@ -17,7 +18,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 
 	user, err := server.store.GetUserByUsername(ctx, req.Username)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
@@ -31,7 +32,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := server.tokenMaker.CreateToken(
+	accessToken, _, err := server.tokenMaker.CreateToken(
 		user.ID,
 		server.config.AccessTokenDuration,
 	)
@@ -40,9 +41,34 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
+	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
+		user.ID,
+		server.config.RefreshTokenDuration,
+	)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
+		ID:           refreshPayload.ID,
+		UserID:       user.ID,
+		RefreshToken: refreshToken,
+		UserAgent:    "",
+		ClientIp:     "",
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiredAt,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
 	rsp := loginUserResponse{
-		AccessToken: accessToken,
-		User:        newUserResponse(user),
+		SessionID:    session.ID,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         newUserResponse(user),
 	}
 
 	ctx.JSON(http.StatusOK, rsp)
