@@ -2,6 +2,9 @@
 postgres:
 	docker run --name postgres14 -p 54321:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:14-alpine
 
+db:
+	docker compose up
+
 createdb:
 	docker exec -it postgres14 createdb --username=root --owner=root voyager_db
 
@@ -29,4 +32,4 @@ mock:
 # newmigrate:
 # 	migrate create -ext sql -dir db/migration -seq <name>
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test server mock
+.PHONY: postgres db createdb dropdb migrateup migratedown sqlc test server mock

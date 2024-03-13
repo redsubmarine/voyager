@@ -9,6 +9,10 @@ import (
 	"github.com/yangoneseok/voyager/util"
 )
 
+// @Summary Login User
+// @Description 로그인
+// @Success 200 {object} loginUserResponse
+// @Router /auth/login [POST]
 func (server *Server) loginUser(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -73,6 +77,12 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rsp)
 }
 
+// @Summary signup User
+// @Description 회원 가입
+// @Accept json
+// @Param data body createUserRequest true "data"
+// @Success 200 {object} userResponse
+// @Router /auth/signup [POST]
 func (server *Server) signUpUser(ctx *gin.Context) {
 	server.createUser(ctx)
 }

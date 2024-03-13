@@ -5,10 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yangoneseok/voyager/db/token"
 )
 
-func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
+func (s *Server) authMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authorizationHeader := ctx.GetHeader(authorizationHeaderKey)
 		if len(authorizationHeader) == 0 {
@@ -27,7 +26,7 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		case authorizationTypeBearer:
 			accessToken := fields[1]
 
-			payload, err := tokenMaker.VerifyToken(accessToken)
+			payload, err := s.tokenMaker.VerifyToken(accessToken)
 			if err != nil {
 				ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
 				return

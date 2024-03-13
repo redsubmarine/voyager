@@ -15,6 +15,7 @@ type Config struct {
 	TokenSymetricKey     string        `mapstructure:"TOKEN_SYMETRIC_KEY"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
+	SwaggerEnabled       bool          `mapstructure:"SWAGGER_ENABLED"`
 }
 
 // LoadConfig reads configuration from file or environment variables.
