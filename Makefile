@@ -29,7 +29,10 @@ server:
 mock:
 	mockgen -package mockdb -destination ./db/mock/store.go github.com/yangoneseok/voyager/db/sqlc Store
 
+dev:
+	docker compose -f docker-compose.dev.yml up
+
 # newmigrate:
 # 	migrate create -ext sql -dir db/migration -seq <name>
 
-.PHONY: postgres db createdb dropdb migrateup migratedown sqlc test server mock
+.PHONY: postgres db createdb dropdb migrateup migratedown sqlc test server mock dev

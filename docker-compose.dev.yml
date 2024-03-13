@@ -1,0 +1,33 @@
+version: "3.9"
+
+networks:
+  api:
+    driver: bridge
+
+services:
+  postgres:
+    container_name: postgres14
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: root
+      POSTGRES_DB: voyager_db
+    volumes:
+      - /data/postgres
+    ports:
+      - 54321:5432
+    networks:
+      - api
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - api
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres/voyager_db?sslmode=disable
+    depends_on:
+      - postgres
+    command: ["server/main"]
